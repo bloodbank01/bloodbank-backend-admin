@@ -67,7 +67,17 @@ class AppointmentRouterClass {
     }
   }
 
+  private async filterAppointment(req: any, res: any): Promise<void> {
+    try {
+      const result = await AppointmentService.filterAppointmentService(req);
+      res.status(result?.success?.statusCode || result?.error?.statusCode).json(result);
+    } catch (error: any) {
+      res.status(STATUS_CODE.EC500).json(Handler.Error(RES_STATUS.E2, STATUS_CODE.EC500, RES_MESSAGE.EM500));
+    }
+  }
+
   private initializeRoutes(): void {
+    this.router.post("/filter", handleAuthorization, this.filterAppointment)
     this.router.get("/", handleAuthorization, this.getAppointment)
     this.router.get("/hospital/doctor", handleAuthorization, this.getHospitalDoctors)
     this.router.get("/hospital", handleAuthorization, this.getHospitalAppointment)
