@@ -64,7 +64,7 @@ app.get('/healthcheck', (req, res) => {
 setInterval(() => {
     (async () => {
         try {
-            const response = await axios.get('https://bloodbank-backend-e8cg.onrender.com/healthcheck');
+            const response = await axios.get('https://bloodbank-backend-admin.onrender.com/healthcheck');
             console.log('Healthcheck response:', response.data);
         } catch (error) {
             console.error('Error during healthcheck:', error);
