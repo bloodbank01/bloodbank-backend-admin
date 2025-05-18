@@ -26,10 +26,7 @@ db.sync({
     console.log('Database connection error--->', err);
 });
 
-app.use(cors({
-    origin: '*',
-    credentials: true,
-}));
+app.use(cors({ origin: '*' }));
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 

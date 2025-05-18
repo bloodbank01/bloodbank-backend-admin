@@ -247,7 +247,7 @@ class AppointmentService {
               include: [
                 [
                   Sequelize.literal(`CASE 
-                    WHEN profile.profile_pic IS NOT NULL THEN CONCAT('${process.env.IMAGE_BASE_URL}', profile.profile_pic)
+                    WHEN profile.profile_pic IS NOT NULL THEN CONCAT('${process.env.IMAGE_BASE_URL_WEB}', profile.profile_pic)
                     ELSE NULL 
                   END`),
                   'profile_pic'

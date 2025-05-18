@@ -23,21 +23,20 @@ let dbPort = process.env.DB_PORT || '0000'
 
 const dialectOptions: any = {};
 dialectOptions.ssl = {
-  require: true,
   rejectUnauthorized: false,
 };
 export const db: Sequelize = new Sequelize(dbName, dbUser, dbPassword, {
   host: dbHost,
   port: Number(dbPort),
   dialect: "postgres", //|'sqlite'|'postgres'|'mssql'
-  // dialectOptions,
-  // logging: true,
-  // pool: {
-  //   max: 5,
-  //   min: 0,
-  //   acquire: 30000,
-  //   idle: 10000
-  // },
+  dialectOptions,
+  logging: true,
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
+  },
   models: [Users, Login_History, Admin, Addresses, Education, Experience, Profile, Hospitals, Doctors, BloodGroup, Contacts, Appointment]
 });
 

@@ -54,7 +54,7 @@ class AuthService {
 
       let exitUser: any = null
 
-      if (type == 'doctor') {
+      if (type?.toLowerCase() == 'doctor') {
         exitUser = await Doctors.findOne({ where: { email } })
       } else {
         exitUser = await Admin.findOne({ where: { email, is_active: true } })
@@ -70,17 +70,16 @@ class AuthService {
         return Handler.Error(RES_STATUS.E2, STATUS_CODE.EC401, "The Password You Entered Is Incorrect!")
       }
 
-      // if (exitUser.dataValues.login_token != null) {
-      //   const decode = await Handler.verifyToken(exitUser.dataValues.login_token)
+      if (exitUser.dataValues.login_token != null) {
+        const decode = await Handler.verifyToken(exitUser.dataValues.login_token)
 
-      //   if (decode) {
-      //     return Handler.Error(RES_STATUS.E2, STATUS_CODE.EC409, "Oops! You’re Already Logged In On Another Device!")
-      //   }
-      // }
+        if (decode) {
+          return Handler.Error(RES_STATUS.E2, STATUS_CODE.EC409, "Oops! You’re Already Logged In On Another Device!")
+        }
+      }
 
       let vr = await this.generateRandomString()
-      const token = await Handler.generateToken({ ...exitUser.dataValues, vr, type }, '2d')
-
+      const token = await Handler.generateToken({ ...exitUser.dataValues, vr, type }, '24h')
       await exitUser.update({ login_token: token, vr })
 
       let history_data: any = { user_id: exitUser.dataValues.id, email: exitUser.dataValues.email, login_token: token, vr, is_admin: type == 'doctor' ? false : true }
@@ -112,7 +111,7 @@ class AuthService {
       }
 
       const accessToken = await this.generateRandomString(10)
-      const token = await Handler.generateToken({ id: exitUser.dataValues.id, email: exitUser.dataValues.email, verification_token: accessToken, type : type?.toLowerCase() }, '2m')
+      const token = await Handler.generateToken({ id: exitUser.dataValues.id, email: exitUser.dataValues.email, verification_token: accessToken, type: type?.toLowerCase() }, '2m')
       console.log("🚀 ~ AuthService ~ signUpService ~ accessToken:", accessToken)
       let url: string = `${process.env.WEB_LINK}reset-password?token=${encodeURIComponent(token)}&accessToken=${accessToken}`
 
@@ -157,9 +156,9 @@ class AuthService {
       let exitUser: any = null
 
       if (type?.toLowerCase() == 'doctor') {
-        exitUser = await Doctors.findOne({ where: {  id: decode.id, email: decode.email } })
+        exitUser = await Doctors.findOne({ where: { id: decode.id, email: decode.email } })
       } else {
-        exitUser = await Admin.findOne({ where: {  id: decode.id, email: decode.email, is_active: true } })
+        exitUser = await Admin.findOne({ where: { id: decode.id, email: decode.email, is_active: true } })
       }
 
       if (!exitUser) {

@@ -46,14 +46,14 @@ export default class Handler {
 
   static async generateToken(payload: any, expiresIn: any): Promise<string> {
     let token = await expiresIn ? this.encrypt(jwt.sign(payload, secretKey, { expiresIn: expiresIn })) : this.encrypt(jwt.sign(payload, secretKey))
-    console.log('generate token', encodeURIComponent(token))
+    // console.log('generate token', encodeURIComponent(token))
     return encodeURIComponent(token);
   };
 
   static async verifyToken(token: string) {
     try {
       let decryptToken = await this.decrypt(decodeURIComponent(token))
-      console.log(decryptToken, 'de token')
+      // console.log(decryptToken, 'de token')
       const decoded: any = jwt.verify(decryptToken, secretKey);
       return decoded;
     } catch (error: any) {
